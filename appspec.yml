@@ -1,17 +1,15 @@
 version: 0.0
 os: linux
 files:
-  - source: src
+  - source: /
     destination: /opt/food_test
-  - source: node_modules
-    destination: /opt/food_test/node_modules
 hooks:
   ApplicationStop:
-    - location: /opt/food_test/deployment_scripts/stop.sh
+    - location: deployment_scripts/stop.sh
       timeout: 180
   AfterInstall:
-    - location: /opt/food_test/deployment_scripts/deploy.sh
+    - location: deployment_scripts/deploy.sh
       timeout: 180
   ApplicationStart:
-    - location: /opt/food_test/deployment_scripts/start.sh
+    - location: deployment_scripts/start.sh
       timeout: 180
