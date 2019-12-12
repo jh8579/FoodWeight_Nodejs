@@ -7,11 +7,11 @@ files:
     destination: /opt/food_test/node_modules
 hooks:
   ApplicationStop:
-    - location: deployment_scripts/stop.sh
+    - location: /opt/food_test/deployment_scripts/stop.sh
       timeout: 180
   AfterInstall:
-    - location: deployment_scripts/deploy.sh
+    - location: /opt/food_test/deployment_scripts/deploy.sh
       timeout: 180
   ApplicationStart:
-    - location: deployment_scripts/start.sh
+    - location: /opt/food_test/deployment_scripts/start.sh
       timeout: 180
