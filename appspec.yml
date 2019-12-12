@@ -2,9 +2,9 @@ version: 0.0
 os: linux
 files:
   - source: src
-    destination: /opt/webapp
+    destination: /opt/food_test
   - source: node_modules
-    destination: /opt/webapp/node_modules
+    destination: /opt/food_test/node_modules
 hooks:
   ApplicationStop:
     - location: deployment_scripts/stop.sh
