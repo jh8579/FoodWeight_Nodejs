@@ -2,8 +2,7 @@ var AWS = require("aws-sdk");
 var fs = require('fs');
 
 AWS.config.update({
-    region: "us-west-2",
-    endpoint: "http://localhost:8000"
+    region: "ap-northeast-2"
 });
 var docClient = new AWS.DynamoDB.DocumentClient();
 var pi_table = "pi_data";
