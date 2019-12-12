@@ -2,4 +2,4 @@
 
 sudo pm2 stop node-app
 # actually start the server
-sudo pm2 start /opt/webapp/index.js -i 0 --name "node-app"
+sudo pm2 start /opt/food_waste/app.js -i 0 --name "node-app"
