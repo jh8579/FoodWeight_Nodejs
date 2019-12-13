@@ -4,38 +4,65 @@ var fs = require('fs');
 AWS.config.update({
     region: "ap-northeast-2"
 });
+
 var docClient = new AWS.DynamoDB.DocumentClient();
 var pi_table = "pi_data";
 var user_table = "user_data";
 var dynamodb = new AWS.DynamoDB();
 
-module.exports = {
-    
+function get_last_weight(ras_id,cb){
+    params = {
+        TableName : pi_table,
+        ExpressionAttributeValues: {
+            ":ras_id": {
+            S: ras_id
+            }
+        },
+        KeyConditionExpression : "ras_id = :ras_id",
+        "ScanIndexForward":false
+    }
+    dynamodb.query(params, function(err, data) {
+        if (err) {
+            console.error("Unable to read item. Error JSON:", JSON.stringify(err, null, 2));
+        } else {
+            console.log(data.Items[0])
+            var last_weight = data.Items[0].weight.N 
+            console.log("Last Weight : ",last_weight)
+            cb(last_weight)
+        }
+    });
+}
 
+module.exports = {
     save_pi_data: function(pi_data,cb){
         console.log(pi_data)
-        // var pi_data = JSON.parse(pi_data);
-        var params = {
-            TableName : pi_table,
-            Item : {
-                "ras_id" : pi_data.ras_id,
-                "date" : pi_data.date,
-                "weight" : pi_data.weight
+        get_last_weight(pi_data.ras_id,function(last_weight){
+            console.log(last_weight)
+            var diff_weight = pi_data.weight - last_weight;
+            if(diff_weight < 0) diff_weight = 0;
+            var params = {
+                TableName : pi_table,
+                Item : {
+                    "ras_id" : pi_data.ras_id,
+                    "save_date" : pi_data.date.toString(),
+                    "weight" : pi_data.weight,
+                    "diff" : diff_weight
+                }
             }
-        }
-        docClient.put(params, function(err, data) {
-            if (err) {
-                console.error("Unable to add item. Error JSON:", JSON.stringify(err, null, 2));
-                cb(false)
-            } else {
-                console.log("Added item:", JSON.stringify(data, null, 2));
-                cb(true)
-            }
-        });
+            docClient.put(params, function(err, data) {
+                if (err) {
+                    console.error("Unable to add item. Error JSON:", JSON.stringify(err, null, 2));
+                    cb(false)
+                } else {
+                    console.log("Added item:", params);
+                    cb(true)
+                }
+            });
+        })
     },
 
     save_app_data: function(app_data,cb){
-        var app_data = JSON.parse(app_data);
+        // var app_data = JSON.parse(app_data);
         var params = {
             TableName : user_table,
             Item : {
@@ -48,7 +75,7 @@ module.exports = {
                 console.error("Unable to add item. Error JSON:", JSON.stringify(err, null, 2));
                 cb(false)
             } else {
-                console.log("Added item:", JSON.stringify(params, null, 2));
+                console.log("Added item:", params);
                 cb(true)
             }
         });
@@ -66,15 +93,13 @@ module.exports = {
             if (err) {
                 console.error("Unable to read item. Error JSON:", JSON.stringify(err, null, 2));
             } else {
-                console.log("GetItem succeeded:", JSON.stringify(data, null, 2));
+                console.log("GetItem succeeded:", data);
                 // console.log(data.Item)
                 if(data.Item){
                     params = {
                         TableName : pi_table,
                         ExpressionAttributeValues: {
-                            ":ras_id": {
-                            S: data.Item.ras_id
-                            }
+                            ":ras_id": { S: data.Item.ras_id }
                         },
                         KeyConditionExpression : "ras_id = :ras_id"
                     }
@@ -84,7 +109,7 @@ module.exports = {
                         } else {
                             JSON.stringify(data, null, 2)
                             // console.log(data.Items)
-                            cb(data.Items) 
+                            cb(data.Items)
                         }
                     });
                 }
@@ -93,26 +118,26 @@ module.exports = {
                 }
             }
         });
+    },
+
+    get_diff_data: function(user_info,cb){
+        console.log(user_info)
+        params = {
+            TableName : pi_table,
+            ExpressionAttributeValues: {
+                ":ras_id": { S: user_info.ras_id},
+                ":save_date" : {S : user_info.date}
+            },
+            KeyConditionExpression : "ras_id = :ras_id and save_date > :save_date",
+        }
+        dynamodb.query(params, function(err, data) {
+            if (err) {
+                console.error("Unable to read item. Error JSON:", JSON.stringify(err, null, 2));
+            } else {
+                JSON.stringify(data, null, 2)
+                console.log(data.Items)
+                cb(data.Items)
+            }
+        });
     }
 }
-// var temp = {
-//     "ras_id" : "eretregre",
-//     "date" : "!23214324ewrew",
-//     "weight" : 14
-// }
-// save_pi_data(JSON.stringify(temp))
-
-// var temp = {
-//         "ras_id" : "eretregre",
-//         "user_id" : "modd"
-// }
-
-// save_app_data(JSON.stringify(temp))
-
-// var temp = {
-//     "ras_id" : "eretregre",
-//     "user_id" : "modd"
-// }
-    
-// get_user_data(JSON.stringify(temp))
-    

@@ -15,7 +15,7 @@ var pi_data =
             KeyType: 'HASH', 
         },
         { // Optional 
-            AttributeName: 'date', 
+            AttributeName: 'save_date', 
             KeyType: 'RANGE', 
         }
     ], 
@@ -25,7 +25,7 @@ var pi_data =
             AttributeType: 'S', // (S | N | B) for string, number, binary 
         },
         { 
-            AttributeName: 'date', 
+            AttributeName: 'save_date', 
             AttributeType: 'S', // (S | N | B) for string, number, binary 
         }
     ], 
@@ -65,10 +65,10 @@ dynamodb.createTable(pi_data, function(err, data) {
     } 
 });
 
-// dynamodb.createTable(user_data, function(err, data) { 
-//     if (err) { 
-//         console.log(err); // an error occurred 
-//     } else { 
-//         console.log(data); // successful response 
-//     } 
-// });
+dynamodb.createTable(user_data, function(err, data) { 
+    if (err) { 
+        console.log(err); // an error occurred 
+    } else { 
+        console.log(data); // successful response 
+    } 
+});
