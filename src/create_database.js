@@ -35,26 +35,26 @@ var pi_data =
     } 
 }; 
 
-var user_data = 
-{ 
-    TableName: 'user_data', 
-    KeySchema: [ 
-        { // Required 
-            AttributeName: 'user_id', 
-            KeyType: 'HASH', 
-        }
-    ], 
-    AttributeDefinitions: [ 
-        { 
-            AttributeName: 'user_id', 
-            AttributeType: 'S', // (S | N | B) for string, number, binary 
-        }
-    ], 
-    ProvisionedThroughput: { // required provisioned throughput for the table 
-        ReadCapacityUnits: 1, 
-        WriteCapacityUnits: 1, 
-    } 
-}; 
+// var user_data = 
+// { 
+//     TableName: 'user_data', 
+//     KeySchema: [ 
+//         { // Required 
+//             AttributeName: 'user_id', 
+//             KeyType: 'HASH', 
+//         }
+//     ], 
+//     AttributeDefinitions: [ 
+//         { 
+//             AttributeName: 'user_id', 
+//             AttributeType: 'S', // (S | N | B) for string, number, binary 
+//         }
+//     ], 
+//     ProvisionedThroughput: { // required provisioned throughput for the table 
+//         ReadCapacityUnits: 1, 
+//         WriteCapacityUnits: 1, 
+//     } 
+// }; 
 
 
 dynamodb.createTable(pi_data, function(err, data) { 

@@ -84,43 +84,43 @@ module.exports = {
         });
     },
 
-    get_user_data: function(user_id,cb){
-        var params = {
-            TableName : user_table,
-            Key : {
-                "user_id" : user_id
-            }
+    get_user_data: function(ras_id,cb){
+        // var params = {
+        //     TableName : user_table,
+        //     Key : {
+        //         "user_id" : user_id
+        //     }
+        // }
+        // console.log(user_id)
+        // docClient.get(params, function(err, data) {
+        //     if (err) {
+        //         console.error("Unable to read item. Error JSON:", JSON.stringify(err, null, 2));
+        //     } else {
+        //         console.log("GetItem succeeded:", data);
+                // console.log(data.Item)
+                // if(data.Item){
+        params = {
+            TableName : pi_table,
+            ExpressionAttributeValues: {
+                ":ras_id": { S: ras_id }
+            },
+            KeyConditionExpression : "ras_id = :ras_id"
         }
-        console.log(user_id)
-        docClient.get(params, function(err, data) {
+        dynamodb.query(params, function(err, data) {
             if (err) {
                 console.error("Unable to read item. Error JSON:", JSON.stringify(err, null, 2));
             } else {
-                console.log("GetItem succeeded:", data);
-                // console.log(data.Item)
-                if(data.Item){
-                    params = {
-                        TableName : pi_table,
-                        ExpressionAttributeValues: {
-                            ":ras_id": { S: data.Item.ras_id }
-                        },
-                        KeyConditionExpression : "ras_id = :ras_id"
-                    }
-                    dynamodb.query(params, function(err, data) {
-                        if (err) {
-                            console.error("Unable to read item. Error JSON:", JSON.stringify(err, null, 2));
-                        } else {
-                            JSON.stringify(data, null, 2)
-                            // console.log(data.Items)
-                            cb(data.Items)
-                        }
-                    });
-                }
-                else{
-                    cb("No User")
-                }
+                JSON.stringify(data, null, 2)
+                // console.log(data.Items)
+                cb(data.Items)
             }
         });
+        //         }
+        //         else{
+        //             cb("No User")
+        //         }
+        //     }
+        // });
     },
 
     get_diff_data: function(user_info,cb){
