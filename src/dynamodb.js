@@ -15,13 +15,14 @@ function get_last_weight(ras_id,cb){
         TableName : pi_table,
         ExpressionAttributeValues: {
             ":ras_id": {
-            S: ras_id
+                S: ras_id
             }
         },
         KeyConditionExpression : "ras_id = :ras_id",
         "ScanIndexForward":false,
         "Limit" : 1,
     }
+    console.log(ras_id)
     dynamodb.query(params, function(err, data) {
         if (err) {
             console.error("Unable to read item. Error JSON:", JSON.stringify(err, null, 2));
@@ -48,7 +49,7 @@ module.exports = {
                 Item : {
                     "ras_id" : pi_data.ras_id,
                     "save_date" : pi_data,
-                    "weight" : pi_data.weight,
+                    "weight" : parseInt(pi_data.weight),
                     "diff" : diff_weight
                 }
             }
