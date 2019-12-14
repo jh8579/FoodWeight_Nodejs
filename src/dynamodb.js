@@ -48,7 +48,7 @@ module.exports = {
                 TableName : pi_table,
                 Item : {
                     "ras_id" : pi_data.ras_id,
-                    "save_date" : pi_data,
+                    "save_date" : date,
                     "weight" : parseInt(pi_data.weight),
                     "diff" : diff_weight
                 }
