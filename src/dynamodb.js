@@ -41,11 +41,13 @@ module.exports = {
             console.log(last_weight)
             var diff_weight = pi_data.weight - last_weight;
             if(diff_weight < 0) diff_weight = 0;
+            var date = new Date(pi_data.date)
+            date = date.getTime().toString()
             var params = {
                 TableName : pi_table,
                 Item : {
                     "ras_id" : pi_data.ras_id,
-                    "save_date" : pi_data.date.toString(),
+                    "save_date" : pi_data,
                     "weight" : pi_data.weight,
                     "diff" : diff_weight
                 }
